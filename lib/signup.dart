@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mysql/dbconnection.dart';
 import 'package:flutter_mysql/login.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
+final _formkey=GlobalKey<FormState>();
 
 
 class signup extends StatefulWidget {
@@ -14,6 +17,13 @@ class _signupState extends State<signup> {
 
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  FToast? fToast;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    fToast=FToast();
+  }
 
 
   @override
@@ -31,50 +41,67 @@ class _signupState extends State<signup> {
         ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              TextField(
-                controller: usernameController,
-                decoration: InputDecoration(
-                  labelText: 'Username',
-                  border: OutlineInputBorder(),
+          child: Form(
+            key: _formkey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                TextFormField(
+                  controller: usernameController,
+                  decoration: InputDecoration(
+                    labelText: 'Username',
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (name) {
+                  if(name == ""){
+                    if(name!.length<3)return "name should have atleast 3 characters";
+                  return "Required*";
+                  };
+                 },
+                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 ),
-              ),
-              SizedBox(height: 16.0),
-              TextField(
-                controller: passwordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: 'Password',
-                  border: OutlineInputBorder(),
+                SizedBox(height: 16.0),
+                TextFormField(
+                  controller: passwordController,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    labelText: 'Password',
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (name) {
+                  if(name == ""){
+                    if(name!.length<3)return "name should have atleast 3 characters";
+                  return "Required*";
+                  };
+                 },
+                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 ),
-              ),
-              SizedBox(height: 16.0),
-              ElevatedButton(
-                onPressed: () async{
-                  // Handle button press
-                  bool idExists = await database().login(uname: usernameController.text??'',pwod: passwordController.text??'');
-                 if(usernameController.text !='' && passwordController.text !=''){
-                                         if(idExists){
-                                                  _showToast();
-                                           }
-                                          else await database().saveData(pwod: passwordController.text,uname: usernameController.text);
-                                          //Navigator.of(context).pop();
-                                          }
-                                           
-                                          // else{
-                                          //   _showToast();
-                                          // }
-    
-                  // Add your logic for handling username and password
-                 // print('Username: $username, Password: $password');
-                },
-                child: Text('Save'),
-              ),
+                SizedBox(height: 16.0),
+                ElevatedButton(
+                  onPressed: () async{
+                    // Handle button press
+                    bool idExists = await database().login(uname: usernameController.text??'',pwod: passwordController.text??'');
+                   if(_formkey.currentState!.validate()){
+                                           if(idExists){
+                                                    _showToast();
+                                             }
+                                            else await database().saveData(pwod: passwordController.text,uname: usernameController.text);
+                                            //Navigator.of(context).pop();
+                                            }
+                                             
+                                            // else{
+                                            //   _showToast();
+                                            // }
               
-            ],
+                    // Add your logic for handling username and password
+                   // print('Username: $username, Password: $password');
+                  },
+                  child: Text('Save'),
+                ),
+                
+              ],
+            ),
           ),
         ),
       ),
