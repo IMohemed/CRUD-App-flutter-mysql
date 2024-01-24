@@ -3,8 +3,10 @@ import 'package:flutter_mysql/dependency_Injection.dart';
 import 'package:flutter_mysql/first.dart';
 import 'package:flutter_mysql/form.dart';
 import 'package:flutter_mysql/login.dart';
+import 'package:get/get.dart';
 
-void main() {
+Future<void>  main() async {
+
   runApp(const MyApp());
   dependencyInjection.init();
 }
@@ -15,7 +17,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return const GetMaterialApp(
       //title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       home: const login(),

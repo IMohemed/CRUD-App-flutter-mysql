@@ -9,7 +9,7 @@ import 'package:flutter_mysql/view.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 
-final _formkey=GlobalKey<FormState>();
+
 
 class Form1 extends StatefulWidget {
   //const Form1({super.key});
@@ -20,6 +20,7 @@ class Form1 extends StatefulWidget {
 }
 
 class _Form1State extends State<Form1> {
+  final _formkey=GlobalKey<FormState>();
   TextEditingController fnameController = TextEditingController();
     TextEditingController lnameController = TextEditingController();
     TextEditingController usernameController = TextEditingController();
@@ -41,7 +42,8 @@ class _Form1State extends State<Form1> {
     if (widget.imag != null) {
                    final imgFile = File(widget.imag!);
 
-  if (imgFile.existsSync() && imgFile.statSync().type == FileSystemEntityType.file) {
+  if (imgFile.existsSync() && imgFile.statSync().type == FileSystemEntityType.file) 
+  {
     _image = imgFile;
     img=widget.imag;
     imageName=widget.imag!.split('/').last;
@@ -51,7 +53,7 @@ class _Form1State extends State<Form1> {
   } else {
     print('Invalid file path: ${widget.imag!}');
   }
-                         } 
+                        } 
     
   }
 

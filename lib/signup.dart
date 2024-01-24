@@ -3,7 +3,7 @@ import 'package:flutter_mysql/dbconnection.dart';
 import 'package:flutter_mysql/login.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-final _formkey=GlobalKey<FormState>();
+
 
 
 class signup extends StatefulWidget {
@@ -14,7 +14,7 @@ class signup extends StatefulWidget {
 }
 
 class _signupState extends State<signup> {
-
+  final _formkey=GlobalKey<FormState>();
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   FToast? fToast;

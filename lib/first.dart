@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mysql/form.dart';
 import 'package:flutter_mysql/view.dart';
+import 'package:flutter_mysql/dependency_Injection.dart';
 
 class First extends StatefulWidget {
   const First({super.key});
@@ -11,6 +12,12 @@ class First extends StatefulWidget {
 }
  
 class _FirstState extends State<First> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    dependencyInjection.init();
+  }
   @override
   Widget build(BuildContext context) {
     return WillPopScope(

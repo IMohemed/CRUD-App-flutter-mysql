@@ -1,5 +1,5 @@
 import 'dart:developer';
-
+import 'package:flutter_mysql/dependency_Injection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mysql/dbconnection.dart';
@@ -27,6 +27,7 @@ class _loginState extends State<login> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    dependencyInjection.init();
     fToast=FToast();
     fToast!.init(context);
   }
