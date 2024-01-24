@@ -2,6 +2,17 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+//import 'package:connectivity/connectivity.dart';
+
+
+class ErrorHandling {
+  static String? errorMessage;
+
+  static void setErrorMessage(String message) {
+    errorMessage = message;
+  }
+}
+
 
 class database{
   List data=[];
@@ -9,7 +20,10 @@ class database{
   Future<void> fetchData({fname,lname,uname,pwod,imag,base,path}) async {
   print(fname);
   
-  try{final res = await http.post(Uri.parse(url),body: {
+  try{
+    //var connectivityResult = await Connectivity().checkConnectivity();
+    //if (connectivityResult != ConnectivityResult.none){
+    final res = await http.post(Uri.parse(url),body: {
     'fname': fname,
     'lname': lname,
     'uname': uname,
@@ -24,27 +38,24 @@ class database{
     // Process the data
   } else {
     throw Exception('Failed to load data');
-  }}
+  }
+  //}
+  // else ErrorHandling.setErrorMessage("No network ");
+  }
   catch(error){
     print("Network error: $error");
-    showToast("Network error: $error");
+    ErrorHandling.setErrorMessage("Network error: $error");
   }
 }
-void showToast(String message) {
-  Fluttertoast.showToast(
-    msg: message,
-    toastLength: Toast.LENGTH_SHORT,
-    gravity: ToastGravity.BOTTOM,
-    timeInSecForIosWeb: 1,
-    backgroundColor: Colors.red,
-    textColor: Colors.white,
-    fontSize: 16.0,
-  );
-}
+
+
 Future<void> getData({fname,lname,uname,pwod}) async {
+  //var connectivityResult = await Connectivity().checkConnectivity();
   var url="http://192.168.1.121/test/retrieve.php";
   print(fname);
-  try{final response = await http.get(Uri.parse(url));
+  try{
+    //if (connectivityResult != ConnectivityResult.none){
+    final response = await http.get(Uri.parse(url));
   data=jsonDecode(response.body);
   print("this ${data}");
   if (response.statusCode == 200) {
@@ -52,10 +63,13 @@ Future<void> getData({fname,lname,uname,pwod}) async {
     // Process the data
   } else {
     throw Exception('Failed to load data');
-  }}
+  }
+  // }
+  // else ErrorHandling.setErrorMessage("No network");
+  }
   catch(error){
       print("Network error: $error");
-    showToast("Network error: $error");
+    ErrorHandling.setErrorMessage("Network error: ");
   }
 }
 Future<void> updateData({fname,lname,uname,pwod,imag,base,path}) async {
@@ -79,7 +93,7 @@ Future<void> updateData({fname,lname,uname,pwod,imag,base,path}) async {
   }}
   catch(error){
     print("Network error: $error");
-    showToast("Network error: $error");
+    ErrorHandling.setErrorMessage("Network error: $error");
   }
 }
 
@@ -96,24 +110,26 @@ Future<void> deleteData({uname}) async {
   }}
   catch(error){ 
       print("Network error: $error");
-    showToast("Network error: $error");
+    ErrorHandling.setErrorMessage("Network error: $error");
   }
 }
 
-Future<void> saveData({uname,pwod}) async {
+Future<bool> saveData({uname,pwod}) async {
   var url="http://192.168.1.121/test/save.php";
   print(uname);
   try{final response = await http.post(Uri.parse(url),body: {'uname': uname,'pwod':pwod});
   //data=jsonDecode(response.body);
   if (response.statusCode == 200) {
     print("success");
+    return true;
     // Process the data
   } else {
     throw Exception('Failed to load data');
   }}
   catch(error){ 
       print("Network error: $error");
-    showToast("Network error: $error");
+    ErrorHandling.setErrorMessage("Network error: $error");
+    return false;
   }
 }
 

@@ -19,6 +19,7 @@ class view extends StatefulWidget {
 }
 
 class _viewState extends State<view> {
+  bool _loading=true;
   FToast? fToast;
   Uint8List? selectedImage;
   Image? selectedImage1;
@@ -31,7 +32,7 @@ class _viewState extends State<view> {
     fToast=FToast();
     //deletedata();
   }
-  
+  String? errorMessage = ErrorHandling.errorMessage;
 
 
   getdata()async{ 
@@ -39,8 +40,9 @@ class _viewState extends State<view> {
     
     await local.getData();
     wholedata = local.data;
+    
     setState(() {
-      
+      errorMessage = " ";
     });
     print(wholedata);
   }
@@ -75,7 +77,7 @@ class _viewState extends State<view> {
             backgroundColor: Colors.blue,
           elevation: 0.0,
          ),
-         body: SingleChildScrollView(
+         body: errorMessage != " "?Center(child: CircularProgressIndicator()): SingleChildScrollView(
            child:Container(
                   child: ListView.builder(shrinkWrap: true,physics: ClampingScrollPhysics(),itemCount: wholedata.length,itemBuilder: (context,index){
                     var fname = wholedata[index]["firstName"];
@@ -103,10 +105,11 @@ class _viewState extends State<view> {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 10.0,horizontal: 4.0),
                         child: Row(
+                          
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(top:25.0),
+                                padding: const EdgeInsets.only(top:5.0),
                                 child: img!=null? CircleAvatar(
                                                 radius: 50,
                                                 backgroundImage: NetworkImage(img),
@@ -118,7 +121,7 @@ class _viewState extends State<view> {
                               SizedBox(width: 7.0,),
                               
                               Padding(
-                                padding: EdgeInsets.only (left:20.0),
+                                padding: EdgeInsets.only (left:6.0),
                                 child: Column(
                                 
                                   children: [Container(
@@ -139,31 +142,35 @@ class _viewState extends State<view> {
                                   ),
                                   SizedBox(height: 5.0,),
                                   Row(
+                                    
                                     children: [
                                       Container(
-                                      width: MediaQuery.of(context).size.width/1.9,
+                                      width: MediaQuery.of(context).size.width/3.4,
                                       child: OutlinedButton.icon(
                                           label: Text('Delete',style: TextStyle(color: Colors.red[400])),
-                                          icon: Icon(Icons.delete),
+                                          icon: Icon(Icons.delete,color: Colors.red[400],),
                                             onPressed: () async{
                                               showAlertDialog(uname);
                                 },
                                       ),),
-                                    ],
-                                  ),
-                                  SizedBox(height: 5.0,),
+                                    
+                                  
+                                  SizedBox(width: 5.0,),
                                   Container(
-                                  width: MediaQuery.of(context).size.width/1.9,
+                                  width: MediaQuery.of(context).size.width/3.4,
                                   child: OutlinedButton.icon(
-                                      label: Text('update',),
+                                      label: Text('Edit',),
                                       icon: Icon(Icons.edit_sharp),
                                         onPressed: (){
                                                         Navigator.push(context,MaterialPageRoute(builder: (context) => Form1(fname: fname,lname: lname,uname: uname,pass: pass,imag:path)),);
                                                     }
                                   ),
                                 ),]
+                                )
+                                ]
+                                )
                                 ),
-                              ),
+                              
                               
                             ],
                           ),
@@ -195,13 +202,15 @@ class _viewState extends State<view> {
       database local = database();
                               await local.deleteData(uname: uname);
     
-                              await local.getData();
-                               //Navigator.of(context).pop();
-                              wholedata=local.data;
+                              // await local.getData();
+                              //  //Navigator.of(context).pop();
+                              // wholedata=local.data;
+                              Navigator.of(context).pop();
                              setState(() {
-                               wholedata;
+                              //  wholedata;
+                              getdata();
                              });
-                             Navigator.of(context).pop();
+                             
 
     },
   );
@@ -251,16 +260,36 @@ _showToast() {
     );
     
     // Custom Toast Position
+    
+}
+_showToast1(error) {
+    Widget toast = Container(
+        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+        decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25.0),
+        color: Colors.redAccent[400],
+        ),
+        child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+            Icon(Icons.check),
+            SizedBox(
+            width: 12.0,
+            ),
+            Text(error),
+        ],
+        ),
+    );
+
+
     fToast?.showToast(
         child: toast,
+        gravity: ToastGravity.BOTTOM,
         toastDuration: Duration(seconds: 2),
-        positionedToastBuilder: (context, child) {
-          return Positioned(
-            child: child,
-            top: 16.0,
-            left: 16.0,
-          );
-        });
+    );
+    
+    // Custom Toast Position
+    
 }
 }
 

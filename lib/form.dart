@@ -24,6 +24,7 @@ class _Form1State extends State<Form1> {
     TextEditingController lnameController = TextEditingController();
     TextEditingController usernameController = TextEditingController();
     TextEditingController pwordController = TextEditingController();
+    bool _loading=true;
     FToast? fToast;
     File? _image;
     Uint8List? selectedImage;
@@ -34,6 +35,7 @@ class _Form1State extends State<Form1> {
     //checkdata();
     //_pickimage();
     //getdata();
+     _loading=false;
     super.initState();
     fToast=FToast();
     if (widget.imag != null) {
@@ -112,7 +114,7 @@ class _Form1State extends State<Form1> {
                  ),
                  validator: (name) {
                   if(name == ""){
-                    if(name!.length<3)return "name should have atleast 3 characters";
+                    //if(name!.length<3)return "name should have atleast 3 characters";
                   return "Required*";
                   };
                  },
@@ -129,7 +131,7 @@ class _Form1State extends State<Form1> {
                  ),
                validator: (name) {
                   if(name == ""){
-                    if(name!.length<3)return "name should have atleast 3 characters";
+                    //if(name!.length<3)return "name should have atleast 3 characters";
                   return "Required*";
                   };
                  },
@@ -146,7 +148,7 @@ class _Form1State extends State<Form1> {
                  ),
              validator: (name) {
                   if(name == ""){
-                    if(name!.length<3)return "name should have atleast 3 characters";
+                    //if(name!.length<3)return "name should have atleast 3 characters";
                   return "Required*";
                   };
                  },
@@ -163,14 +165,14 @@ class _Form1State extends State<Form1> {
                  ),
               validator: (name) {
                   if(name == ""){
-                    if(name!.length<3)return "name should have atleast 3 characters";
+                    //if(name!.length<3)return "name should have atleast 3 characters";
                   return "Required*";
                   };
                  },
               autovalidateMode: AutovalidateMode.onUserInteraction,
               ),
               SizedBox(height: 5.0,),
-              widget.uname==null?
+              widget.uname==null? 
               ElevatedButton(
                 
                 onPressed: () async {
@@ -182,7 +184,10 @@ class _Form1State extends State<Form1> {
                     if(idExists){
                       _showToast2();
                     }
-                    else{
+                    else if(selectedImage == null){
+                          _showToast1();
+                    }
+                    else{ 
                   await database().fetchData(fname: fnameController.text,lname: lnameController.text,uname: usernameController.text,pwod: pwordController.text,imag: imageName,base: base,path:img);
                   _showToast();
          
@@ -242,7 +247,7 @@ class _Form1State extends State<Form1> {
     final scaffold = ScaffoldMessenger.of(context);
     scaffold.showSnackBar(
       SnackBar(
-        content:  Text('field is empty'),
+        content:  Text('pick image'),
         //action: SnackBarAction(label: 'UNDO', onPressed: scaffold.hideCurrentSnackBar),
       ),
     );

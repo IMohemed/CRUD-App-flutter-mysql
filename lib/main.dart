@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mysql/dependency_Injection.dart';
 import 'package:flutter_mysql/first.dart';
 import 'package:flutter_mysql/form.dart';
 import 'package:flutter_mysql/login.dart';
 
 void main() {
   runApp(const MyApp());
+  dependencyInjection.init();
 }
 
 class MyApp extends StatelessWidget {
